@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- cdnjs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+        integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ=="
+        crossorigin="anonymous" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <h3 id="hth">📜Read Amazing thoughts of Amazing people📜</h3 id="hth">
+        <div class="inner" data-aos="zoom-in"></div>
+        <!-- <div class="inner" data-aos="flip-left" data-aos-easing="ease-out-cubic" data-aos-duration="2000"> -->
+            <p id="my">Read And tweet thoughts</p>
+            <div class="box">
+                <p class="number">
+                    <img src="images/logo.png" alt="tweetMe" title="TweetMe" id="tweetMe" />
+                </p>
+                <div class="text">
+                    <i class="start-quote fas fa-quote-left"></i>
+                    <p id="quotes" class="quotes"></p>
+                    <p id="author" class="author">🖋</p>
+                    <label class="button">
+                        <p id="newq">New Quotes</p>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- https://michalsnik.github.io/aos/          : for animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        const quotes = document.getElementById("quotes");
+        const author = document.getElementById("author");
+        const newq = document.getElementById("newq");
+        const tweetMe = document.getElementById("tweetMe");
+        let realData = "";
+        let quotesData = "";
+        ////
+        const tweetNow = () => {
+            //https://developer.twitter.com/en/docs/twitter-for-websites/tweet-button/guides/web-intent
+            let tweetPost = `https://twitter.com/intent/tweet?text=${quotesData.text}   By🖋  ${quotesData.author}`;  //?text=${quoytesData.text} : add Query parameters in link
+            window.open(tweetPost);
+        };
+        //fun : for Randomly new quotes
+        const getNewQuotes = () => {
+            let ranum = Math.floor(Math.random() * 1820);
+            console.log(ranum);
+            quotesData = realData[ranum];                          //random obj fetch from api
+            quotes.innerText = ` 🖋 ${quotesData.text}`;
+            quotesData.author == null ? (author.innerText = `Unknown`) : (author.innerText = `${quotesData.author}`);
+        };
+
+        //fun : for fetch api
+        const getQuotes = async () => {
+            const api = "https://type.fit/api/quotes";
+            try {
+                let data = await fetch(api);
+                realData = await data.json();                   //convert into json formate
+                getNewQuotes();
+                //console.log(Object.keys(realData).length);   //obj length
+                //console.log(realData[0]);
+                //console.log(realData[0].text);
+                //console.log(realData[0].author);
+            } catch (error) { }
+        };
+        tweetMe.addEventListener('click', tweetNow);             //tweet event
+        newq.addEventListener('click', getNewQuotes);           //button event
+        getQuotes();
+    </script>
+</body>
+
+</html>
